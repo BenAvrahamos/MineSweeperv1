@@ -10,10 +10,17 @@ body {
     width: 2em;
     height: 2em;
     border: 2px solid white;
+    background-color: rgb(160, 156, 156);
   }
 
   .hide span {
     display: none;
   }
 
+  .shown {
+    background-color: rgb(75, 75, 75);
+  }
 
+
+
+  
