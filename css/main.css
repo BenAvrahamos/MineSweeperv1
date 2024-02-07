@@ -1,7 +1,10 @@
+
 body {
     background-color: black;
     color:white;
+    margin: auto;
     text-align: center;
+    
   }
 
   
@@ -11,15 +14,36 @@ body {
     height: 2em;
     border: 2px solid white;
     background-color: rgb(160, 156, 156);
+
   }
 
   .hide span {
     display: none;
+    
   }
 
   .shown {
     background-color: rgb(75, 75, 75);
   }
+
+  .uI{
+    background-color: rgb(150, 150, 150);
+    width: 350px;
+    text-align: center;
+
+
+  }
+
+  .smily{
+    background-color: rgb(160, 156, 156);
+    /* border: solid;color:rgb(160, 156, 156) ; */
+
+
+
+  }
+
+
+
 
 
 
