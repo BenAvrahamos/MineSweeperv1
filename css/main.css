@@ -9,6 +9,7 @@ body {
 
   
   .cell {
+    
     font-size: 1.5em;
     width: 2em;
     height: 2em;
@@ -27,6 +28,7 @@ body {
   }
 
   .uI{
+    font-size: 40px;
     background-color: rgb(150, 150, 150);
     width: 350px;
     text-align: center;
@@ -35,12 +37,25 @@ body {
   }
 
   .smily{
+     font-size: 40px;
     background-color: rgb(160, 156, 156);
     /* border: solid;color:rgb(160, 156, 156) ; */
 
 
 
   }
+
+  .flag {
+    font-size: 1.5em;
+    width: 2em;
+    height: 2em;
+    border: 2px solid white;
+    background-color: rgb(160, 156, 156);
+  }
+  .flag::after{
+
+  content: "\1F6A9"
+}
 
 
 
