@@ -2,12 +2,20 @@
 
 var gBoard
 
+var gMagGlassToggled = false
+var gMegaHintToggled = false
+
+var hintCord1 = null
+var hintCord2 = null
+
 var gGame = {
     isOn: true,
     shownCount: 0,
     correctMarkedCount: 0,
     secsPassed: 0,
-    lives: 3
+    lives: 3,
+    hints: 3,
+    megaHint: 1
 }
 
 var gLevel = {
@@ -97,10 +105,18 @@ function countNeighbors(cellI, cellJ, board,) {
     return neighborsCount
 }
 
-function onCellClicked(elCell, i, j) {
+function onCellClicked(elCell, cellI, cellJ) {
+
     if (gGame.isOn === false) return
-    if (gGame.shownCount === 0 ){}
-    if (gBoard[i][j].isMarked) return
+    //hint section
+    if (gMagGlassToggled) { displayHints(cellI, cellJ, gBoard); return }
+    if (gMegaHintToggled && hintCord1 === null) { hintCord1 = { cellI, cellJ }, console.log('hintCord1',hintCord1);; return }
+    if (gMegaHintToggled && hintCord1 !== null) {
+        hintCord2 = { cellI, cellJ },
+            displayMegaHints(gBoard); console.log('hintCord2',hintCord2); return
+    }
+    //-------
+    if (gBoard[cellI][cellJ].isMarked) return
     if (elCell.classList.contains('shown')) return
     const isMine = elCell.getAttribute('data-isMine')
     if (isMine === 'true') {
@@ -110,10 +126,10 @@ function onCellClicked(elCell, i, j) {
     elCell.classList.replace('hide', 'shown')
 
     const elCellId = elCell.getAttribute('id')
-    if (elCellId === '0' && !gBoard[i][j].isMine) {
-        expandShown(i, j, gBoard)
+    if (elCellId === '0' && !gBoard[cellI][cellJ].isMine) {
+        expandShown(cellI, cellJ, gBoard)
     } else { gGame.shownCount++ }
-    gBoard[i][j].isShown = true
+    gBoard[cellI][cellJ].isShown = true
 
     renderUI()
     gameState()
@@ -136,13 +152,21 @@ function getRandomInt(min, max) {
 }
 
 function renderUI() {
+    //Lives
     const elLives = document.querySelector('.uI .lives')
     elLives.innerHTML = gGame.lives
     const elSmile = document.querySelector('.smily span')
     if (gGame.lives === 0) elSmile.innerHTML = '🤯'
     if (gGame.shownCount + gGame.correctMarkedCount === gLevel.SIZE ** 2) elSmile.innerHTML = '🥳'
+    //flags
     const elFlags = document.querySelector('.uI .flagsLeft')
     elFlags.innerHTML = gLevel.FLAGS
+    //hints
+    const elMagGlass = document.querySelector('.magnifyingGlass ')
+    elMagGlass.textContent = `🔎${gGame.hints}`
+    const elMegaHint = document.querySelector('.megaHint ')
+    elMegaHint.textContent = `🔬${gGame.megaHint}`
+
 }
 
 function gameState() {
@@ -157,6 +181,8 @@ function resetGame() {
         correctMarkedCount: 0,
         secsPassed: 0,
         lives: 3,
+        hints: 3,
+        megaHint:1
     }
     gLevel.FLAGS = gLevel.MINES
     const elSmile = document.querySelector('.smily span')
@@ -196,11 +222,11 @@ function changeDifficulty(event) {
 
 function placeFlag(event, elCell, cellI, cellJ, gBoard) {
     event.preventDefault()
-    
+
     if (gGame.isOn === false) return
     if (elCell.classList.contains('shown')) return
     const currCell = gBoard[cellI][cellJ]
-   
+
     if (gLevel.FLAGS === 0 && !elCell.classList.contains('flag')) return
     elCell.classList.toggle('flag')
     if (!currCell.isMarked) {
@@ -216,10 +242,103 @@ function placeFlag(event, elCell, cellI, cellJ, gBoard) {
             gGame.correctMarkedCount--
         }
         gLevel.FLAGS++
-    
+
 
     }
 
     gameState()
     renderUI()
+}
+
+
+
+function activeMagnifyingGlass(elMagGlass) {
+    if (!gGame.isOn) return
+    if (gMegaHintToggled) return
+    if (gGame.hints === 0) return
+    if (gMagGlassToggled) {
+        gMagGlassToggled = false
+    } else if (!gMagGlassToggled) {
+        gMagGlassToggled = true
+    }
+    console.log(gMagGlassToggled);
+    elMagGlass.classList.toggle('magnifyingGlassToggled')
+}
+
+
+function displayHints(cellI, cellJ, gBoard) {
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue //skips tiles beyond border of mat
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            // if (i === cellI && j === cellJ) continue//skip self
+            if (j < 0 || j >= gBoard[i].length) continue //skips tiles beyond border of mat
+            if (gBoard[i][j].isMarked || gBoard[i][j].isShown) continue
+            const elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+            elCell.classList.replace('hide', 'isHinted')
+
+
+
+
+            setTimeout(() => {
+                elCell.classList.replace('isHinted', 'hide')
+            }, 1000);
+        }
+    }
+    gGame.hints--
+    const elMagGlass = document.querySelector('.magnifyingGlass ')
+    elMagGlass.classList.toggle('magnifyingGlassToggled')
+    gMagGlassToggled = false
+    console.log(gMagGlassToggled);
+    renderUI()
+}
+
+
+function activeMegaHint(elMegaHint) {
+    if (!gGame.isOn) return
+    if (gMagGlassToggled) return
+    if (gGame.megaHint === 0) return
+    if (gMegaHintToggled) {
+        gMegaHintToggled = false
+    } else if (!gMegaHintToggled) {
+        gMegaHintToggled = true
+    }
+    elMegaHint.classList.toggle('megaHintToggled')
+}
+
+function displayMegaHints(gBoard) {
+    const elMegaHint = document.querySelector('.megaHint ')
+    if (hintCord1.cellI > hintCord2.cellI || hintCord1.cellJ > hintCord2.cellJ) {
+        elMegaHint.classList.toggle('megaHintToggled')
+        gMegaHintToggled = false
+        hintCord1 = null
+        hintCord2 = null
+        console.log(gMegaHintToggled);
+        console.log('hintcord1', hintCord1);
+        return
+    }
+    for (var i = hintCord1.cellI; i <= hintCord2.cellI; i++) {
+        if (i < 0 || i >= gBoard.length) continue //skips tiles beyond border of mat
+        for (var j = hintCord1.cellJ; j <= hintCord2.cellJ; j++) {
+            console.log('i', i, 'j', j);
+
+            if (j < 0 || j >= gBoard[i].length) continue //skips tiles beyond border of mat
+            if (gBoard[i][j].isMarked || gBoard[i][j].isShown) continue
+            const elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+            elCell.classList.replace('hide', 'isHinted')
+
+
+
+
+            setTimeout(() => {
+                elCell.classList.replace('isHinted', 'hide')
+            }, 2000);
+        }
+    }
+    gGame.megaHint--
+    elMegaHint.classList.toggle('megaHintToggled')
+    gMegaHintToggled = false
+    renderUI()
+    hintCord1 = null
+    hintCord2 = null
+    console.log(hintCord1, hintCord2);
 }

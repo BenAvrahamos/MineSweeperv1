@@ -42,11 +42,13 @@ body {
   .uI{
     font-size: 40px;
     background-color: rgb(150, 150, 150);
-    width: 500px;
+    width: 800px;
+    height: 80px;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
     border: 2px solid rgb(0, 0, 0);
+    
 
 
   }
@@ -59,6 +61,14 @@ body {
 
 
   }
+  .hint{
+    font-size: 40px;
+   background-color: rgb(160, 156, 156);
+   /* border: solid;color:rgb(160, 156, 156) ; */
+
+ }
+
+
 
   .flag {
     font-size: 1.5em;
@@ -73,9 +83,48 @@ body {
   content: "\1F6A9"
 }
 
+.isHinted{
+  transition: 300ms;
+ background-color: rgba(152, 236, 96, 0.274);
+
+}
 
 
 
+.magnifyingGlass {
+  background-color: rgb(150, 150, 150);
+  transition: 200ms;
+  padding: 5px;
+}
+
+.magnifyingGlass:hover {
+  background-color: rgba(212, 211, 99, 0.74);
+  padding: 5px;
+}
+
+.magnifyingGlassToggled {
+  background-color: rgba(212, 193, 20, 0.87);
+  outline: solid bl;
+  padding: 5px;
+}
 
 
-  
+.megaHint {
+  background-color: rgb(150, 150, 150);
+  transition: 200ms;
+  padding: 5px;
+}
+
+.megaHint:hover {
+  background-color: rgba(212, 211, 99, 0.74);
+  padding: 5px;
+}
+
+.megaHintToggled {
+  background-color: rgba(212, 193, 20, 0.87);
+  outline: solid bl;
+  padding: 5px;
+}
+
+
+
