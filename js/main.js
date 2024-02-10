@@ -217,7 +217,7 @@ function resetGame() {
         shownCount: 0,
         correctMarkedCount: 0,
         secsPassed: 0,
-        lives: 100,
+        lives: 3,
         hints: 3,
         megaHint: 1
     }
