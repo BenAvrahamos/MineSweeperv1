@@ -79,27 +79,18 @@ function renderBoard(board) {
             const isMine = currCell.isMine
             const numColor = gColors[minesAroundTile]
 
-
-
             strHTML += `\t<td style="color: ${numColor};" id=${minesAroundTile}
              data-i=${i} data-j=${j} data-isMine=${isMine} class="cell hide" 
              onclick="onCellClicked(this,${i},${j},gBoard)"'
               oncontextmenu="placeFlag(event,this,${i},${j},gBoard)" >\n`
-
-            //decides rendered value of  of cell:
             strHTML += '<span style = "font-size: 30px; ">'
 
             if (currCell.isMine) strHTML += MINE
             if (!currCell.isMine && minesAroundTile > 0) strHTML += minesAroundTile
             strHTML += '</span>'
-
-
-
-
             strHTML += '\t</td>\n'
         }
         strHTML += '</tr>\n'
-
         elBoard.innerHTML = strHTML
     }
 }
@@ -116,10 +107,9 @@ function setMinesNeighsCount(board) {
 function countNeighbors(cellI, cellJ, board,) {
     var neighborsCount = 0
     for (var i = cellI - 1; i <= cellI + 1; i++) {
-        if (i < 0 || i >= board.length) continue //skips tiles beyond border of mat
+        if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-            if (i === cellI && j === cellJ) continue//skip self
-            if (j < 0 || j >= board[i].length) continue //skips tiles beyond border of mat
+            if (j < 0 || j >= board[i].length || i === cellI && j === cellJ) continue
             if (board[i][j].isMine === true) neighborsCount++
         }
     }
@@ -127,7 +117,6 @@ function countNeighbors(cellI, cellJ, board,) {
 }
 
 function onCellClicked(elCell, cellI, cellJ) {
-
     if (!gGame.isOn) return
     //hint section
     if (gMagGlassOn) { displayHints(cellI, cellJ, gBoard); return }
@@ -145,7 +134,6 @@ function onCellClicked(elCell, cellI, cellJ) {
 
     const isMine = elCell.getAttribute('data-isMine')
     const elCellId = elCell.getAttribute('id')
-
     //if bomb pressed
     if (isMine === 'true') {
         elCell.classList.replace('hide', 'shown')
@@ -163,14 +151,9 @@ function onCellClicked(elCell, cellI, cellJ) {
         gBoard[cellI][cellJ].isShown++
         gGame.shownCount++
     }
-
-
     renderUI()
     checkGameOver()
 }
-
-
-
 
 function randomMines(gBoard) {
     for (var i = 0; i <= gLevel.MINES - 1; i++) {
@@ -235,8 +218,7 @@ function expandShown(cellI, cellJ, board,) {
             if (j < 0 || j >= board[i].length) continue
             const currCell = board[i][j]
             const elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
-            if (currCell.isShown) continue
-            if (currCell.isMarked) continue
+            if (currCell.isShown || currCell.isMarked) continue
             if (!currCell.isMine) {
                 currCell.isShown = true
                 gGame.shownCount++
@@ -269,19 +251,15 @@ function placeFlag(event, elCell, cellI, cellJ, gBoard) {
         currCell.isMarked = true
         if (currCell.isMine) {
             gGame.correctMarkedCount++
+            gLevel.FLAGS--
         }
-
-        gLevel.FLAGS--
     } else {
         currCell.isMarked = false
         if (currCell.isMine) {
             gGame.correctMarkedCount--
+            gLevel.FLAGS++
         }
-        gLevel.FLAGS++
-
-
     }
-
     checkGameOver()
     renderUI()
 }

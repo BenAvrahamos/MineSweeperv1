@@ -10,7 +10,6 @@ function activeMagnifyingGlass(elMagGlass) {
     elMagGlass.classList.toggle('magnifyingGlassToggled')
 }
 
-
 function displayHints(cellI, cellJ, gBoard) {
     gGame.isOn = false
     for (var i = cellI - 1; i <= cellI + 1; i++) {
@@ -20,10 +19,6 @@ function displayHints(cellI, cellJ, gBoard) {
             if (gBoard[i][j].isMarked || gBoard[i][j].isShown) continue
             const elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
             elCell.classList.replace('hide', 'isHinted')
-
-
-
-
             setTimeout(() => {
                 elCell.classList.replace('isHinted', 'hide')
                 gGame.isOn = true
@@ -36,7 +31,6 @@ function displayHints(cellI, cellJ, gBoard) {
     gMagGlassOn = false
     renderUI()
 }
-
 
 function activeMegaHint(elMegaHint) {
     if (!gGame.isOn) return
@@ -84,10 +78,6 @@ function displayMegaHints(gBoard) {
             if (gBoard[i][j].isMarked || gBoard[i][j].isShown) continue
             const elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
             elCell.classList.replace('hide', 'isHinted')
-
-
-
-
             setTimeout(() => {
                 elCell.classList.replace('isHinted', 'hide')
                 gGame.isOn = true
