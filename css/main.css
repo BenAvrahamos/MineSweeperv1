@@ -71,12 +71,13 @@ body {
 
 
   .flag {
+    
     font-size: 1.5em;
     width: 2em;
     height: 2em;
-    border: 2px solid rgb(0, 0, 0);
-
+    border: 2px solid rgb(46, 46, 46);
     background-color: rgb(160, 156, 156);
+    border-width: 0.2px;
   }
   .flag::after{
 
